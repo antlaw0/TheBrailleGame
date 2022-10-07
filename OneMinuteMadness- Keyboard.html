@@ -1,0 +1,286 @@
+<html>
+<title> The Braille Game </title>
+<head>
+<style>
+
+html { 
+  background: url(images/mainbackground.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+</style>
+
+
+</head>
+<body onload="start()">
+<center>
+<h1> The Braille Game </h1>
+<br>
+<span id="timer" style="font-size: 88"> 59</span>
+<table>
+<tr>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot1' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot4' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+</tr>
+<tr>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot2' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot5' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+</tr>
+
+<tr>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot3' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+<td>
+<svg  height="100" width="100">
+  <circle id = 'dot6' cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" />
+</svg>
+</td>
+</tr>
+</table>
+
+</center>
+<button id='btn' onclick="changeDot()"> test </button>
+<center>
+<span> SCORE</span>
+<br>
+<span id="score" style="font-size: 88">0</span>
+<br>
+<input id ="entertext" onkeyup="process_input()" autofocus> </input>
+</center>
+</body>
+<script>
+var msg = new SpeechSynthesisUtterance();
+msg.text = "Hello World";
+window.speechSynthesis.speak(msg);
+
+var dot1 = document.getElementById('dot1')
+var textinput = document.getElementById('entertext')
+var timer = document.getElementById('timer')
+var scoreSpan = document.getElementById('score')
+var score = 0;
+
+var d1 = false
+var d2 = false
+var d3 = false
+var d4 = false
+var d5 = false
+var d6 = false
+var dots = []
+var bpatterns = [];
+bpatterns.push(["a", [1]]);
+bpatterns.push(["b", [1, 2]]);
+bpatterns.push(["c", [1, 4]]);
+bpatterns.push(["d", [1, 4, 5]]);
+bpatterns.push(["e", [1, 5]]);
+bpatterns.push(["f", [1, 2, 4]]);
+bpatterns.push(["g", [1, 2, 4, 5]]);
+bpatterns.push(["h", [1, 2, 5]]);
+bpatterns.push(["i", [2, 4]]);
+bpatterns.push(["j", [2, 4, 5]]);
+bpatterns.push(["k", [1, 3]]);
+bpatterns.push(["l", [1, 2, 3]]);
+bpatterns.push(["m", [1, 3, 4]]);
+bpatterns.push(["n", [1, 3, 4, 5]]);
+bpatterns.push(["o", [1, 3, 5]]);
+bpatterns.push(["p", [1, 2, 3, 4]]);
+bpatterns.push(["q", [1, 2, 3, 4, 5]]);
+bpatterns.push(["r", [1, 2, 3, 5]]);
+bpatterns.push(["s", [2, 3, 4]]);
+bpatterns.push(["t", [2, 3, 4, 5]]);
+bpatterns.push(["u", [1, 3, 6]]);
+bpatterns.push(["v", [1, 2, 3, 6]]);
+bpatterns.push(["w", [2, 4, 5, 6]]);
+bpatterns.push(["x", [1, 3, 4, 6]]);
+bpatterns.push(["y", [1, 3, 4, 5, 6]]);
+bpatterns.push(["z", [1, 3, 5, 6]]);
+var intervalTimer = setInterval(timer_tic, 1000);
+
+
+
+
+
+
+
+//window.addEventListener('keydown', function (e) {
+//alert("test");
+//}, false);
+//console.log(get_braille("b"));
+var current_char = Math.floor(Math.random() * 25) + 1;
+changeDots(bpatterns[current_char][1]);
+
+function process_input() {
+if (textinput.value != "") {
+if (textinput.value == bpatterns[current_char][0]) {
+//alert("correct");
+s=parseInt(scoreSpan.textContent);
+s+=1;
+score = s;
+scoreSpan.textContent=s.toString();
+playSound("beep_high.wav");
+current_char = Math.floor(Math.random() * 25) + 1;
+changeDots(bpatterns[current_char][1]);
+textinput.value="";
+msg.text = convert_dots_to_speech(bpatterns[current_char][1]);
+
+window.speechSynthesis.speak(msg);
+
+} else {
+//alert("Incorrect");
+playSound("negative.wav");
+textinput.value="";
+msg.text = convert_dots_to_speech(bpatterns[current_char][1]);
+window.speechSynthesis.speak(msg);
+
+textinput.value = "";
+}//end of else
+}//end of if value is not ""
+}//end of process_input
+//===============================================================================
+function convert_dots_to_speech(array) {
+a= ""
+for (i in array) {
+//console.log(array[i]);
+a += array[i].toString()+", "
+}//end of loop
+return a;
+}//end of convert array to speech
+
+//=====================================================================
+function get_braille(charname) {
+charname = charname;
+for (i in bpatterns) {
+//console.log(a[0]);
+if (charname == bpatterns[i][0]) {
+return bpatterns[i][1];
+break;
+}//end of if charname matches
+}
+
+}//end of get braille
+//==================================================================
+function get_character(brl) {
+for (i in bpatterns) {
+if (brl == bpatterns[i][1]) {
+return bpatterns[i][0];
+break;
+}//end of if brl match
+}//end of for loop
+}//end of get_brl
+function changeDot() {
+
+//console.log(get_braille("b"));
+//changeDots([1, 2])
+timer_tic()
+}
+function changeDots(array) {
+  
+  if (array.includes(1))
+  {
+  document.getElementById('dot1').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot1').style.fill = "white";
+  }
+  //dot 2
+  if (array.includes(2))
+  {
+  document.getElementById('dot2').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot2').style.fill = "white";
+  }
+  
+  //dot 3
+  if (array.includes(3))
+  {
+  document.getElementById('dot3').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot3').style.fill = "white";
+  }
+  //dot 4
+  if (array.includes(4))
+  {
+  document.getElementById('dot4').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot4').style.fill = "white";
+  }
+  //dot 5
+  if (array.includes(5))
+  {
+  document.getElementById('dot5').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot5').style.fill = "white";
+  }
+  
+  //dot 6
+  if (array.includes(6))
+  {
+  document.getElementById('dot6').style.fill = "red";
+  }
+  else
+  {
+  document.getElementById('dot6').style.fill = "white";
+  }
+  
+  
+
+} //end of changeDots
+//===================================================================
+function playSound (s) {
+	let a = new Audio(s);
+	a.play();
+}
+
+//=====================================================
+function timer_tic() {
+t = parseInt(timer.textContent);
+t-=1;
+//console.log(t);
+timer.textContent=t.toString();
+if (t == -1) {
+alert("Time is up! Your final score is "+score.toString());
+window.location.href = "index.html";
+
+}//end of t is less than 0
+}//end of timer_tic
+
+//=============================================================
+function start() {
+//setInterval(timer_tic(), 1000);
+}//end of start function
+//=======================================================
+function isCharacterALetter(char) {
+  return (/[a-zA-Z]/).test(char)
+}
+</script>
+</html>
