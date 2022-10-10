@@ -1,0 +1,31 @@
+
+html { 
+  background: url(mainbackground.png);
+ no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+p {
+max-width:  40vw;
+}
+h1 {
+font-family:  Geneva;
+font-size:  88;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: red;
+}
+
+
+}
+h2 {
+font-family:  Geneva;
+font-size:  66;
+}
+h3 {
+font-family:  Geneva;
+font-size:  44;
+}

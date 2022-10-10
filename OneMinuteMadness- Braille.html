@@ -16,7 +16,7 @@ html {
 
 
 </head>
-<body  onload="start()">
+<body  >
 <center>
 <h1> The Braille Game </h1>
 <br>
@@ -170,7 +170,7 @@ s.replace('l', '');
 }
 if (entertext.value != "") {
 if (braille_array.toString() == bpatterns[current_char][1].toString()) {
-playSound('beep_high.wav');
+playSound('sounds/beep_high.wav');
 changeDots(braille_array);
 score+=1;
 scoreSpan.textContent=score.toString();
@@ -181,7 +181,7 @@ setTimeout(clearDots, 1000);
 letter.textContent = bpatterns[current_char][0].toUpperCase();
 
 } else {
-playSound('negative.wav');
+playSound('sounds/negative.wav');
 }//end of if braille array matches current charname
 }//end of if input is empty-cells
 //console.log(Object.entries(braille_array));
@@ -315,6 +315,7 @@ t = parseInt(timer.textContent);
 t-=1;
 //console.log(t);
 timer.textContent=t.toString();
+
 if (t == -1) {
 alert("Time is up! Your final score is "+score.toString());
 window.location.href = "index.html";

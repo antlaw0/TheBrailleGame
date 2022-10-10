@@ -138,7 +138,7 @@ s=parseInt(scoreSpan.textContent);
 s+=1;
 score = s;
 scoreSpan.textContent=s.toString();
-playSound("beep_high.wav");
+playSound("sounds/beep_high.wav");
 current_char = Math.floor(Math.random() * 25) + 1;
 changeDots(bpatterns[current_char][1]);
 textinput.value="";
@@ -148,7 +148,7 @@ window.speechSynthesis.speak(msg);
 
 } else {
 //alert("Incorrect");
-playSound("negative.wav");
+playSound("sounds/negative.wav");
 textinput.value="";
 msg.text = convert_dots_to_speech(bpatterns[current_char][1]);
 window.speechSynthesis.speak(msg);
@@ -267,6 +267,11 @@ t = parseInt(timer.textContent);
 t-=1;
 //console.log(t);
 timer.textContent=t.toString();
+
+if (t == 0) {
+playSound("sounds/timesup.mp3");
+
+}
 if (t == -1) {
 alert("Time is up! Your final score is "+score.toString());
 window.location.href = "index.html";
